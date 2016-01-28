@@ -9,9 +9,11 @@ import android.graphics.drawable.Drawable;
 import android.view.Display;
 
 import com.kitkatdev.m2dl.chanllengeandroidclm.briques.Brique;
+import com.kitkatdev.m2dl.chanllengeandroidclm.service.ConfigurationService;
 
 public class Palette
 {
+    private Integer sens;
     private Drawable img = null; // image de la balle
     private int x, y; // coordonnées x,y de la balle en pixel
     private int paletteW, paletteH; // largeur et hauteur de la balle en pixels
@@ -30,6 +32,8 @@ public class Palette
     // il servira à accéder aux ressources, dont l'image de la balle
     private final Context mContext;
 
+    private int sensPrecedent;
+
     // Constructeur de l'objet "Balle"
     public Palette(final Context c)
     {
@@ -38,8 +42,17 @@ public class Palette
         display.getSize(size);
         int width = size.x;
         int height = size.y;
-        maxPaletteWidth = width;
-        maxPaletteHeight = height;
+        if(ConfigurationService.getInstance().getSens() == 0)
+        {
+
+            maxPaletteWidth = width;
+            maxPaletteHeight = height;
+        }
+        else
+        {
+            maxPaletteWidth = height;
+            maxPaletteHeight = width;
+        }
         paletteW =width/5;
         paletteH =height/10;
 
@@ -117,28 +130,6 @@ public class Palette
     }
 
     // déplace la balle en détectant les collisions avec les bords de l'écran
-    public void moveWithCollisionDetection()
-    {
-        // si on ne doit pas déplacer la balle (lorsqu'elle est sous le doigt du joueur)
-        // on quitte
-        if(!move) {return;}
-
-        // on incrémente les coordonnées X et Y
-        x += speedX;
-        y += speedY;
-
-        // si x dépasse la largeur de l'écran, on inverse le déplacement
-        if(x+ paletteW > wEcran) {speedX=-INCREMENT;}
-
-        // si y dépasse la hauteur l'écran, on inverse le déplacement
-        if(y+ paletteH > hEcran) {speedY=-INCREMENT;}
-
-        // si x passe à gauche de l'écran, on inverse le déplacement
-        if(x<0) {speedX=INCREMENT;}
-
-        // si y passe à dessus de l'écran, on inverse le déplacement
-        if(y<0) {speedY=INCREMENT;}
-    }
 
     // on dessine la balle, en x et y
     public void draw(Canvas canvas)
@@ -179,4 +170,36 @@ public class Palette
         this.minPaletteHeight = minPaletteHeight;
     }
 
+    public int getSensPrecedent() {
+        return sensPrecedent;
+    }
+
+    public void setSensPrecedent(int sensPrecedent) {
+        this.sensPrecedent = sensPrecedent;
+    }
+
+    public void changeDeSens(int nouveauSens) {
+        Display display = WindowManagerInstancier.getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int width = size.x;
+        int height = size.y;
+        sens = ConfigurationService.getInstance().getSens();
+        if(ConfigurationService.getInstance().getSens() == 0)
+        {
+
+            maxPaletteWidth = width;
+            maxPaletteHeight = height;
+            x = width / 2 - paletteW / 2;
+            y = height - 10 - paletteH; // position de départ
+        }
+        else
+        {
+            x = height / 2 - paletteH / 2;
+            y = width - paletteW; // position de départ
+            maxPaletteWidth = height;
+            maxPaletteHeight = width;
+        }
+        this.resize(width, height);
+    }
 } // public class Balle

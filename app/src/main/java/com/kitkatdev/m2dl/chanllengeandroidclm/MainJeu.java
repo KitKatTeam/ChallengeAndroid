@@ -116,8 +116,6 @@ public class MainJeu extends SurfaceView implements SurfaceHolder.Callback {
     // Fonction appelée par la boucle principale (CustomThread)
     // On gère ici le déplacement des objets
     public void update() {
-        palette.moveWithCollisionDetection();
-
         synchronized (briques) {
             Iterator<Brique> it = briques.iterator();
             Brique currentBrique = null;
@@ -166,6 +164,11 @@ public class MainJeu extends SurfaceView implements SurfaceHolder.Callback {
                             brique.setSens(ConfigurationService.getInstance().getSens());
                         }
                     }
+                    palette.changeDeSens(ConfigurationService.getInstance().getSens());
+                    SurfaceHolder holder = getHolder();
+                    Canvas c = holder.lockCanvas();
+                    palette.draw(c);
+                    getHolder().unlockCanvasAndPost(c);
                 }
             }, 0, 3000);
         }
@@ -269,29 +272,34 @@ public class MainJeu extends SurfaceView implements SurfaceHolder.Callback {
 
             // code exécuté lorsque le doigt touche l'écran.
             case MotionEvent.ACTION_DOWN:
-                // si le doigt touche la palette :
-                if (currentX >= palette.getX() &&
-                        currentX <= palette.getX() + palette.getPaletteW() &&
-                        currentY >= palette.getY() && currentY <= palette.getY() + palette.getPaletteH()) {
-                    // on arrête de déplacer la palette
-                    palette.setMove(false);
-                }
-                break;
 
             // code exécuté lorsque le doight glisse sur l'écran.
             case MotionEvent.ACTION_MOVE:
                 // on déplace la palette sous le doigt du joueur
                 // si elle est déjà sous son doigt (oui si on a setMove à false)
-                if (!palette.isMoving()) {
-                    if (currentX >= palette.getMinPaletteWidth() && currentX + palette.getPaletteW()  - palette.getPaletteW() <= palette.getMaxPaletteWidth()) {
-                        palette.setX(currentX - palette.getPaletteW() / 2);
-                        if(currentY >= palette.getMaxPaletteHeight() - palette.getPaletteH() && currentY + palette.getPaletteH() <= palette.getMaxPaletteHeight() + palette.getPaletteW() / 2)
-                        {
-                            palette.setY(currentY - palette.getPaletteH() / 2);
+                    if(ConfigurationService.getInstance().getSens() == 0)
+                    {
+                        if (currentX >= palette.getMinPaletteWidth() && currentX + palette.getPaletteW()  - palette.getPaletteW() <= palette.getMaxPaletteWidth()) {
+                            palette.setX(currentX - palette.getPaletteW() / 2);
+                            if(currentY >= palette.getMaxPaletteHeight() - palette.getPaletteH() && currentY + palette.getPaletteH() <= palette.getMaxPaletteHeight() + palette.getPaletteW() / 2)
+                            {
+                                palette.setY(currentY - palette.getPaletteH() / 2);
 
+                            }
                         }
                     }
-                }
+                    else
+                    {
+                        if (currentY >= palette.getMinPaletteHeight() && currentY + palette.getPaletteH()  - palette.getPaletteH() <= palette.getMaxPaletteHeight()) {
+                            palette.setY(currentY - palette.getPaletteH() / 2);
+                            if(currentX >= palette.getMaxPaletteWidth() - palette.getPaletteW() && currentX + palette.getPaletteW() <= palette.getMaxPaletteWidth() + palette.getPaletteH() / 2)
+                            {
+                                palette.setX(currentX - palette.getPaletteW() / 2);
+
+                            }
+                        }
+                    }
+
                 break;
 
             // lorsque le doigt quitte l'écran
