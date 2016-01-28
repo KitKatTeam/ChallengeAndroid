@@ -11,10 +11,8 @@ import com.kitkatdev.m2dl.chanllengeandroidclm.briques.Brique;
 import com.kitkatdev.m2dl.chanllengeandroidclm.briques.TimerBrique;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
+
 
 // SurfaceView est une surface de dessin.
 // référence : http://developer.android.com/reference/android/view/SurfaceView.html
@@ -24,7 +22,6 @@ public class MainJeu extends SurfaceView implements SurfaceHolder.Callback {
     private CustomThread CustomThread;
     private List<Brique> briques;
     private Palette palette;
-    private TimerBrique timerBrique;
 
     // création de la surface de dessin
     public MainJeu(Context context) {
@@ -49,7 +46,9 @@ public class MainJeu extends SurfaceView implements SurfaceHolder.Callback {
 
     // Fonction qui "dessine" un écran de jeu
     public void doDraw(Canvas canvas) {
-        if(canvas==null) {return;}
+        if (canvas == null) {
+            return;
+        }
 
         // on efface l'écran, en blanc
         canvas.drawColor(Color.WHITE);
@@ -81,8 +80,8 @@ public class MainJeu extends SurfaceView implements SurfaceHolder.Callback {
     @Override
     public void surfaceCreated(SurfaceHolder surfaceHolder) {
         // création du processus CustomThread si cela n'est pas fait
-        if(CustomThread.getState()==Thread.State.TERMINATED) {
-            CustomThread=new CustomThread(this);
+        if (CustomThread.getState() == Thread.State.TERMINATED) {
+            CustomThread = new CustomThread(this);
         }
         CustomThread.setRunning(true);
         CustomThread.start();
@@ -99,8 +98,7 @@ public class MainJeu extends SurfaceView implements SurfaceHolder.Callback {
             try {
                 CustomThread.join();
                 retry = false;
-            }
-            catch (InterruptedException e) {}
+            } catch (InterruptedException e) {}
         }
     }
 
@@ -115,9 +113,9 @@ public class MainJeu extends SurfaceView implements SurfaceHolder.Callback {
             // code exécuté lorsque le doigt touche l'écran.
             case MotionEvent.ACTION_DOWN:
                 // si le doigt touche la palette :
-                if(currentX >= palette.getX() &&
-                        currentX <= palette.getX()+ palette.getBalleW() &&
-                        currentY >= palette.getY() && currentY <= palette.getY()+ palette.getBalleH() ) {
+                if (currentX >= palette.getX() &&
+                        currentX <= palette.getX() + palette.getPaletteW() &&
+                        currentY >= palette.getY() && currentY <= palette.getY() + palette.getPaletteH()) {
                     // on arrête de déplacer la palette
                     palette.setMove(false);
                 }
@@ -127,9 +125,15 @@ public class MainJeu extends SurfaceView implements SurfaceHolder.Callback {
             case MotionEvent.ACTION_MOVE:
                 // on déplace la palette sous le doigt du joueur
                 // si elle est déjà sous son doigt (oui si on a setMove à false)
-                if(!palette.isMoving()) {
-                    palette.setX(currentX);
-                    palette.setY(currentY);
+                if (!palette.isMoving()) {
+                    if (currentX >= palette.getMinPaletteWidth() && currentX + palette.getPaletteW()  - palette.getPaletteW() <= palette.getMaxPaletteWidth()) {
+                        palette.setX(currentX - palette.getPaletteW() / 2);
+                        if(currentY >= palette.getMaxPaletteHeight() - palette.getPaletteH() && currentY + palette.getPaletteH() <= palette.getMaxPaletteHeight() + palette.getPaletteW() / 2)
+                        {
+                            palette.setY(currentY - palette.getPaletteH() / 2);
+
+                        }
+                    }
                 }
                 break;
 
