@@ -16,7 +16,7 @@ public class Palette
     private int x, y; // coordonnées x,y de la balle en pixel
     private int paletteW, paletteH; // largeur et hauteur de la balle en pixels
     private int wEcran, hEcran; // largeur et hauteur de l'écran en pixels
-    private boolean move = true; // 'true' si la balle doit se déplacer automatiquement, 'false' sinon
+    private boolean move = false; // 'true' si la balle doit se déplacer automatiquement, 'false' sinon
 
 
     private int maxPaletteWidth = 0, minPaletteWidth = 0;
