@@ -8,13 +8,15 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.view.Display;
 
+import com.kitkatdev.m2dl.chanllengeandroidclm.briques.Brique;
+
 public class Palette
 {
     private Drawable img = null; // image de la balle
     private int x, y; // coordonnées x,y de la balle en pixel
     private int paletteW, paletteH; // largeur et hauteur de la balle en pixels
     private int wEcran, hEcran; // largeur et hauteur de l'écran en pixels
-    private boolean move = true; // 'true' si la balle doit se déplacer automatiquement, 'false' sinon
+    private boolean move = false; // 'true' si la balle doit se déplacer automatiquement, 'false' sinon
 
 
     private int maxPaletteWidth = 0, minPaletteWidth = 0;
