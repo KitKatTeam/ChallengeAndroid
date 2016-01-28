@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.kitkatdev.m2dl.chanllengeandroidclm.MainActivity;
+
 import com.kitkatdev.m2dl.chanllengeandroidclm.R;
 import com.kitkatdev.m2dl.chanllengeandroidclm.service.ConfigurationService;
 
@@ -25,7 +26,6 @@ public class MenuActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
-
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);

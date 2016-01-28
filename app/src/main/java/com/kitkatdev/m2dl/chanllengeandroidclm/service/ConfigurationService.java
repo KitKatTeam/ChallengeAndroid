@@ -34,9 +34,27 @@ public class ConfigurationService {
     private String userName;
     private List<Score> scoreList = new ArrayList<Score>();
     private MediaPlayer mediaPlayer = new MediaPlayer();
+    private MediaPlayer mediaPlayer1 = new MediaPlayer();
+    private MediaPlayer mediaPlayer2 = new MediaPlayer();
     private MainActivity mainActivity;
     private MainJeu mainJeu;
     private Integer sens;
+
+    public MediaPlayer getMediaPlayer1() {
+        return mediaPlayer1;
+    }
+
+    public void setMediaPlayer1(MediaPlayer mediaPlayer1) {
+        this.mediaPlayer1 = mediaPlayer1;
+    }
+
+    public MediaPlayer getMediaPlayer2() {
+        return mediaPlayer2;
+    }
+
+    public void setMediaPlayer2(MediaPlayer mediaPlayer2) {
+        this.mediaPlayer2 = mediaPlayer2;
+    }
 
     public Integer getSens() {
         return sens;

@@ -9,6 +9,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.media.MediaPlayer;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -199,6 +200,7 @@ public class MainJeu extends SurfaceView implements SurfaceHolder.Callback {
     public void changeFont(){
         cpt++;
 
+        ConfigurationService configurationService = ConfigurationService.getInstance();
 
 
         // BITMAP
@@ -206,20 +208,27 @@ public class MainJeu extends SurfaceView implements SurfaceHolder.Callback {
         if (cpt % 3 == 0){
             background = b1;
 
+            configurationService.getMediaPlayer().start();
+
         }
         if (cpt % 3 == 1){
             background = b2;
 
+
+            configurationService.getMediaPlayer().start();
+
         }
         if (cpt % 3 == 2){
             background = b3;
+
+            configurationService.getMediaPlayer().start();
 
         }
 
         scaled = Bitmap.createScaledBitmap(background, palette.getMaxPaletteWidth(), palette.getMaxPaletteHeight(), true);
 
         // SCREEN
-        ConfigurationService configurationService = ConfigurationService.getInstance();
+
         if (cpt % 3 == 0) {
             configurationService.setSens(1);
         }
