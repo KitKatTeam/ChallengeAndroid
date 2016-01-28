@@ -222,4 +222,8 @@ public class Brique
         canvas.drawBitmap(img.getBitmap(), x, y, null);
     }
 
+    public int getPoints(){
+        return vitesseBrique.getValue();
+    }
+
 }
