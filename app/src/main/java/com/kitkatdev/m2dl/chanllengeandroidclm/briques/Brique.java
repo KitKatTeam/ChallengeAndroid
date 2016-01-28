@@ -60,7 +60,7 @@ public class Brique
     private final Context mContext;
 
     // Constructeur de l'objet "Balle"
-    public Brique(final Context c)
+    public Brique(final Context c, int sens)
     {
         x = 0;
         y = 0;
@@ -82,17 +82,8 @@ public class Brique
                 break;
         }
 
-        sens = 0;
+        sens = sens;
     }
-
-    public Brique(final Context c,int x)
-    {
-        this.x = x;
-        y =1;
-        mContext=c; // sauvegarde du contexte
-        etat = EtatBrique.MOVING;
-    }
-
     // on attribue à l'objet "Balle" l'image passée en paramètre
     // w et h sont sa largeur et hauteur définis en pixels
     public BitmapDrawable setImage(final Context c, final int ressource, final int w, final int h)

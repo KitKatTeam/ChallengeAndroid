@@ -1,6 +1,7 @@
 package com.kitkatdev.m2dl.chanllengeandroidclm.activity;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -25,6 +26,7 @@ public class MenuActivity extends AppCompatActivity {
 
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         configurationService = ConfigurationService.getInstance();
         configurationService.setMediaPlayer(MediaPlayer.create(getBaseContext(), R.raw.music1));
