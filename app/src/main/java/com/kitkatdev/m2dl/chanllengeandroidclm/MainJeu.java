@@ -17,6 +17,8 @@ import com.kitkatdev.m2dl.chanllengeandroidclm.briques.TimerBrique;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 
 // SurfaceView est une surface de dessin.
@@ -30,14 +32,11 @@ public class MainJeu extends SurfaceView implements SurfaceHolder.Callback {
     private Brique brique2;
     private Brique brique3;
     private Palette palette;
+    private Integer cpt = 0;
     private int nbPoints;
 
 
     private Bitmap scaled;
-
-    public void onDraw(Canvas canvas) {
-        //canvas.drawBitmap(scaled, 0, 0, null); // draw the background
-    }
 
 
     // création de la surface de dessin
@@ -125,12 +124,37 @@ public class MainJeu extends SurfaceView implements SurfaceHolder.Callback {
         CustomThread.setRunning(true);
         CustomThread.start();
 
-
         Bitmap background = BitmapFactory.decodeResource(getResources(), R.drawable.fond1);
-        float scale = (float) background.getHeight() / (float) getHeight();
-        int newWidth = Math.round(background.getWidth() / scale);
-        int newHeight = Math.round(background.getHeight() / scale);
-        scaled = Bitmap.createScaledBitmap(background, newWidth, newHeight, true);
+        scaled = Bitmap.createScaledBitmap(background, palette.getMaxPaletteWidth(), palette.getMaxPaletteHeight(), true);
+
+
+        new Timer().scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                changeFont();
+            }
+        }, 0, 3000);
+
+    }
+
+
+    public void changeFont(){
+        cpt++;
+        Bitmap background = null;
+        if (cpt % 3 == 0){
+            background = BitmapFactory.decodeResource(getResources(), R.drawable.fond1);
+
+        }
+        if (cpt % 3 == 1){
+            background = BitmapFactory.decodeResource(getResources(), R.drawable.fond2);
+        }
+        if (cpt % 3 == 2){
+            background = BitmapFactory.decodeResource(getResources(), R.drawable.fond3);
+        }
+
+        scaled = Bitmap.createScaledBitmap(background, palette.getMaxPaletteWidth(), palette.getMaxPaletteHeight(), true);
+
+
     }
 
     // Fonction obligatoire de l'objet SurfaceView
