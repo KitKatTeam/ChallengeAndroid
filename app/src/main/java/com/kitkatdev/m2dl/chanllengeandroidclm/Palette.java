@@ -8,6 +8,8 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.view.Display;
 
+import com.kitkatdev.m2dl.chanllengeandroidclm.briques.Brique;
+
 public class Palette
 {
     private Drawable img = null; // image de la balle

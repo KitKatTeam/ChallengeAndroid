@@ -6,9 +6,11 @@ package com.kitkatdev.m2dl.chanllengeandroidclm.briques;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 
+import com.kitkatdev.m2dl.chanllengeandroidclm.Palette;
 import com.kitkatdev.m2dl.chanllengeandroidclm.R;
 
 import java.util.Random;
@@ -18,6 +20,8 @@ public class Brique
     public enum EtatBrique {
         MOVING, OUT
     }
+
+    private static int HAUTEUR_PALETTE = 10;
     private BitmapDrawable img=null; // image de la balle
     private int x,y; // coordonnées x,y de la balle en pixel
     private int balleW, balleH; // largeur et hauteur de la balle en pixels
@@ -27,7 +31,7 @@ public class Brique
 
 
     // pour déplacer la balle on ajoutera INCREMENT à ses coordonnées x et y
-    private static final int INCREMENT = 5;
+    private static final int INCREMENT = 10;
     private int speedX=INCREMENT, speedY=INCREMENT;
 
     // contexte de l'application Android
@@ -37,7 +41,15 @@ public class Brique
     // Constructeur de l'objet "Balle"
     public Brique(final Context c)
     {
-        x = 1;
+        x = 0;
+        y = 0;
+        mContext=c; // sauvegarde du contexte
+        etat = EtatBrique.MOVING;
+    }
+
+    public Brique(final Context c,int x)
+    {
+        this.x = x;
         y =1;
         mContext=c; // sauvegarde du contexte
         etat = EtatBrique.MOVING;
@@ -76,7 +88,9 @@ public class Brique
         /*if(wEcran != 0) {
             x = 1 + new Random().nextInt(wEcran);
         }*/
-        y=hEcran; // position de départ
+        //y=hEcran; // position de départ
+
+        x= new Random().nextInt(wScreen);
 
         // on définit (au choix) la taille de la balle à 1/5ème de la largeur de l'écran
         balleW=wScreen/5;
@@ -123,22 +137,29 @@ public class Brique
     }
 
     // déplace la balle en détectant les collisions avec les bords de l'écran
-    public void moveWithCollisionDetection()
+    public boolean moveWithCollisionDetection(Palette palette)
     {
-        // si on ne doit pas déplacer la balle (lorsqu'elle est sous le doigt du joueur)
-        // on quitte
-        if(!move) {return;}
 
         // on incrémente les coordonnées Y
-        y-=speedY;
+        y+=speedY;
 
 
         // si y dépasse la hauteur l'écran, on inverse le déplacement
-        if(y+balleH > hEcran) {speedY=-INCREMENT;}
-
-
-        // si y passe à 0 on supprime la brique
-        if(y < 0) {etat = EtatBrique.OUT;}
+        if(y+balleH >= hEcran - HAUTEUR_PALETTE) {
+            Rect briqueRect = new Rect(x, y, balleW, balleH);
+            Rect paletteRect = new Rect(palette.getX(), palette.getY(), palette.getPaletteW(), palette.getPaletteH());
+            if(paletteRect.intersect(briqueRect)) {
+                return true;
+            }
+            y=0;
+            if(wEcran != 0) {
+                x= Math.min(new Random().nextInt(wEcran),wEcran-balleW);
+            } else
+            {
+                x = new Random().nextInt(200);
+            }
+        }
+        return false;
     }
 
     // on dessine la balle, en x et y
