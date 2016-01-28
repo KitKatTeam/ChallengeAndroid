@@ -1,5 +1,6 @@
 package com.kitkatdev.m2dl.chanllengeandroidclm;
 
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.media.MediaPlayer;
@@ -13,6 +14,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.WindowManager;
 
+import com.kitkatdev.m2dl.chanllengeandroidclm.activity.ScoreActivity;
+import com.kitkatdev.m2dl.chanllengeandroidclm.model.Score;
 import com.kitkatdev.m2dl.chanllengeandroidclm.service.ConfigurationService;
 
 public class MainActivity extends AppCompatActivity {
@@ -48,8 +51,10 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        setContentView(R.layout.activity_main);
+
+    public void  goToScore(){
+        Intent intent = new Intent(MainActivity.this, ScoreActivity.class);
+        startActivity(intent);
+        finish();
     }
 }

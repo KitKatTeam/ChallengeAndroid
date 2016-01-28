@@ -1,6 +1,8 @@
 package com.kitkatdev.m2dl.chanllengeandroidclm;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -16,6 +18,7 @@ import android.widget.Toast;
 
 import com.kitkatdev.m2dl.chanllengeandroidclm.briques.Brique;
 import com.kitkatdev.m2dl.chanllengeandroidclm.briques.TimerBrique;
+import com.kitkatdev.m2dl.chanllengeandroidclm.model.Score;
 import com.kitkatdev.m2dl.chanllengeandroidclm.service.ConfigurationService;
 
 import java.util.ArrayList;
@@ -103,8 +106,9 @@ public class MainJeu extends SurfaceView implements SurfaceHolder.Callback {
         paint.setColor(Color.BLACK);
         paint.setTextSize(70);
         Integer pt = nbPoints;
-        canvas.drawText("Nombre de point : "+pt.toString() , 700, 25, paint);
-        canvas.drawText("Nombre de vie : "+pt.toString() , 700, 25+80, paint);
+        Integer vie = nbVies;
+        canvas.drawText("Nombre de point : "+pt.toString() , 550, 50, paint);
+        canvas.drawText("Nombre de vie : "+vie.toString() , 550, 50+80, paint);
 
     }
 
@@ -128,6 +132,9 @@ public class MainJeu extends SurfaceView implements SurfaceHolder.Callback {
                     nbVies--;
                     if(nbVies == 0){
                         //TODO aller vers page steve
+                        ConfigurationService configurationService = ConfigurationService.getInstance();
+                        configurationService.getScoreList().add(new Score(configurationService.getUserName(),nbPoints));
+                        configurationService.getMainActivity().goToScore();
                     }
                 }
             }
@@ -165,19 +172,25 @@ public class MainJeu extends SurfaceView implements SurfaceHolder.Callback {
         new Timer().scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                if(nbTimes == 100){
-                    Brique newBrique = new Brique(getContext(),ConfigurationService.getInstance().getSens());
-                    newBrique.resize(palette.getMaxPaletteWidth(),palette.getMaxPaletteHeight());
-                    briques.add(newBrique);
-                    nbTimes = 0;
-                }
-                update();
-                SurfaceHolder holder = getHolder();
-                Canvas c = holder.lockCanvas();
-                doDraw(c);
-                getHolder().unlockCanvasAndPost(c);
-                nbTimes++;
+
+
+                    if (nbTimes == 100) {
+                        Brique newBrique = new Brique(getContext(), ConfigurationService.getInstance().getSens());
+                        newBrique.resize(palette.getMaxPaletteWidth(), palette.getMaxPaletteHeight());
+                        briques.add(newBrique);
+                        nbTimes = 0;
+                    }
+                    update();
+                    SurfaceHolder holder = getHolder();
+                    Canvas c = holder.lockCanvas();
+                    if (c != null) {
+
+                        doDraw(c);
+                        getHolder().unlockCanvasAndPost(c);
+                    }
+                    nbTimes++;
             }
+
         }, 0, 10);
 
     }

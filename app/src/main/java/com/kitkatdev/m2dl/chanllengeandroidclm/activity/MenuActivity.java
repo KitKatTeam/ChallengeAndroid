@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import com.kitkatdev.m2dl.chanllengeandroidclm.MainActivity;
 import com.kitkatdev.m2dl.chanllengeandroidclm.R;
@@ -37,7 +39,8 @@ public class MenuActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                configurationService.setUserName(nouvellePartieButton.getText().toString());
+                EditText editText = (EditText) findViewById(R.id.editText);
+                configurationService.setUserName(editText.getText().toString());
 
                 Intent intent = new Intent(MenuActivity.this, MainActivity.class);
                 startActivity(intent);
