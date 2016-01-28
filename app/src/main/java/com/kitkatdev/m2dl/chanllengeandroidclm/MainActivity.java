@@ -17,6 +17,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        WindowManagerInstancier.getInstance().setWindowManager(this.getWindowManager());
+
         // On cré un objet "MainJeu" qui est le code principal du jeu
         MainJeu=new MainJeu(this);
 

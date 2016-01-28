@@ -7,12 +7,21 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import com.kitkatdev.m2dl.chanllengeandroidclm.briques.Brique;
+import com.kitkatdev.m2dl.chanllengeandroidclm.briques.TimerBrique;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+
 // SurfaceView est une surface de dessin.
 // référence : http://developer.android.com/reference/android/view/SurfaceView.html
 public class MainJeu extends SurfaceView implements SurfaceHolder.Callback {
 
     // déclaration de l'objet définissant la boucle principale de déplacement et de rendu
     private CustomThread CustomThread;
+    private List<Brique> briques;
     private Palette palette;
 
     // création de la surface de dessin
@@ -21,6 +30,16 @@ public class MainJeu extends SurfaceView implements SurfaceHolder.Callback {
         getHolder().addCallback(this);
         CustomThread = new CustomThread(this);
 
+        // Creation briques
+        briques = new ArrayList<>();
+        briques.add(new Brique(getContext()));
+        briques.add(new Brique(getContext()));
+        briques.add(new Brique(getContext()));
+        briques.add(new Brique(getContext()));briques.add(new Brique(getContext()));
+
+        //briques.add(new Brique(this.getContext()));
+
+
         // création d'un objet "palette", dont on définira la largeur/hauteur
         // selon la largeur ou la hauteur de l'écran
         palette = new Palette(this.getContext());
@@ -28,19 +47,33 @@ public class MainJeu extends SurfaceView implements SurfaceHolder.Callback {
 
     // Fonction qui "dessine" un écran de jeu
     public void doDraw(Canvas canvas) {
-        if(canvas==null) {return;}
+        if (canvas == null) {
+            return;
+        }
 
         // on efface l'écran, en blanc
         canvas.drawColor(Color.WHITE);
 
         // on dessine la palette
         palette.draw(canvas);
+        for (Brique brique : briques) {
+            brique.draw(canvas);
+        }
     }
 
     // Fonction appelée par la boucle principale (CustomThread)
     // On gère ici le déplacement des objets
     public void update() {
         palette.moveWithCollisionDetection();
+        Iterator<Brique> it = briques.iterator();
+        Brique currentBrique = null;
+        while (it.hasNext()) {
+            currentBrique = it.next();
+            currentBrique.moveWithCollisionDetection();
+            if(currentBrique.getEtat() == Brique.EtatBrique.OUT){
+                it.remove();
+            }
+        }
     }
 
     // Fonction obligatoire de l'objet SurfaceView
@@ -48,8 +81,8 @@ public class MainJeu extends SurfaceView implements SurfaceHolder.Callback {
     @Override
     public void surfaceCreated(SurfaceHolder surfaceHolder) {
         // création du processus CustomThread si cela n'est pas fait
-        if(CustomThread.getState()==Thread.State.TERMINATED) {
-            CustomThread=new CustomThread(this);
+        if (CustomThread.getState() == Thread.State.TERMINATED) {
+            CustomThread = new CustomThread(this);
         }
         CustomThread.setRunning(true);
         CustomThread.start();
@@ -66,8 +99,7 @@ public class MainJeu extends SurfaceView implements SurfaceHolder.Callback {
             try {
                 CustomThread.join();
                 retry = false;
-            }
-            catch (InterruptedException e) {}
+            } catch (InterruptedException e) {}
         }
     }
 
@@ -82,9 +114,9 @@ public class MainJeu extends SurfaceView implements SurfaceHolder.Callback {
             // code exécuté lorsque le doigt touche l'écran.
             case MotionEvent.ACTION_DOWN:
                 // si le doigt touche la palette :
-                if(currentX >= palette.getX() &&
-                        currentX <= palette.getX()+ palette.getBalleW() &&
-                        currentY >= palette.getY() && currentY <= palette.getY()+ palette.getBalleH() ) {
+                if (currentX >= palette.getX() &&
+                        currentX <= palette.getX() + palette.getPaletteW() &&
+                        currentY >= palette.getY() && currentY <= palette.getY() + palette.getPaletteH()) {
                     // on arrête de déplacer la palette
                     palette.setMove(false);
                 }
@@ -94,9 +126,15 @@ public class MainJeu extends SurfaceView implements SurfaceHolder.Callback {
             case MotionEvent.ACTION_MOVE:
                 // on déplace la palette sous le doigt du joueur
                 // si elle est déjà sous son doigt (oui si on a setMove à false)
-                if(!palette.isMoving()) {
-                    palette.setX(currentX);
-                    palette.setY(currentY);
+                if (!palette.isMoving()) {
+                    if (currentX >= palette.getMinPaletteWidth() && currentX + palette.getPaletteW()  - palette.getPaletteW() <= palette.getMaxPaletteWidth()) {
+                        palette.setX(currentX - palette.getPaletteW() / 2);
+                        if(currentY >= palette.getMaxPaletteHeight() - palette.getPaletteH() && currentY + palette.getPaletteH() <= palette.getMaxPaletteHeight() + palette.getPaletteW() / 2)
+                        {
+                            palette.setY(currentY - palette.getPaletteH() / 2);
+
+                        }
+                    }
                 }
                 break;
 
@@ -115,5 +153,12 @@ public class MainJeu extends SurfaceView implements SurfaceHolder.Callback {
     @Override
     public void surfaceChanged(SurfaceHolder surfaceHolder, int i, int w, int h) {
         palette.resize(w,h); // on définit la taille de la palette selon la taille de l'écran
+        for (Brique brique : briques) {
+            brique.resize(w,h);
+        }
+    }
+
+    public void addBrique(Brique brique) {
+        this.briques.add(brique);
     }
 } // class MainJeu

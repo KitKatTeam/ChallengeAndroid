@@ -1,24 +1,30 @@
-package com.kitkatdev.m2dl.chanllengeandroidclm;
+package com.kitkatdev.m2dl.chanllengeandroidclm.briques;
 
+/**
+ * Created by loicleger on 28/01/16.
+ */
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.view.Display;
 
-public class Palette
+import com.kitkatdev.m2dl.chanllengeandroidclm.R;
+
+import java.util.Random;
+
+public class Brique
 {
-    private Drawable img = null; // image de la balle
-    private int x, y; // coordonnées x,y de la balle en pixel
-    private int paletteW, paletteH; // largeur et hauteur de la balle en pixels
-    private int wEcran, hEcran; // largeur et hauteur de l'écran en pixels
+    public enum EtatBrique {
+        MOVING, OUT
+    }
+    private BitmapDrawable img=null; // image de la balle
+    private int x,y; // coordonnées x,y de la balle en pixel
+    private int balleW, balleH; // largeur et hauteur de la balle en pixels
+    private int wEcran,hEcran; // largeur et hauteur de l'écran en pixels
     private boolean move = true; // 'true' si la balle doit se déplacer automatiquement, 'false' sinon
+    private EtatBrique etat;
 
-
-    private int maxPaletteWidth = 0, minPaletteWidth = 0;
-    private int maxPaletteHeight = 0, minPaletteHeight = 0;
 
     // pour déplacer la balle on ajoutera INCREMENT à ses coordonnées x et y
     private static final int INCREMENT = 5;
@@ -29,21 +35,12 @@ public class Palette
     private final Context mContext;
 
     // Constructeur de l'objet "Balle"
-    public Palette(final Context c)
+    public Brique(final Context c)
     {
-        Display display = WindowManagerInstancier.getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        int width = size.x;
-        int height = size.y;
-        maxPaletteWidth = width;
-        maxPaletteHeight = height;
-        paletteW =width/5;
-        paletteH =height/10;
-
-        x = width / 2 - paletteW / 2;
-        y = height - 10 - paletteH; // position de départ
+        x = 1;
+        y =1;
         mContext=c; // sauvegarde du contexte
+        etat = EtatBrique.MOVING;
     }
 
     // on attribue à l'objet "Balle" l'image passée en paramètre
@@ -65,7 +62,7 @@ public class Palette
     // définit si oui ou non la balle doit se déplacer automatiquement
     // car on la bloque sous le doigt du joueur lorsqu'il la déplace
     public void setMove(boolean move) {
-        this.move = false;
+        this.move = move;
     }
 
     // redimensionnement de l'image selon la largeur/hauteur de l'écran passés en paramètre
@@ -75,13 +72,16 @@ public class Palette
         // à détecter les collisions sur les bords de l'écran
         wEcran=wScreen;
         hEcran=hScreen;
-        maxPaletteWidth = wEcran;
-        maxPaletteHeight = hEcran;
+
+        /*if(wEcran != 0) {
+            x = 1 + new Random().nextInt(wEcran);
+        }*/
+        y=hEcran; // position de départ
 
         // on définit (au choix) la taille de la balle à 1/5ème de la largeur de l'écran
-        paletteW =wScreen/5;
-        paletteH =wScreen/10;
-        img = setImage(mContext,R.drawable.palette, paletteW, paletteH);
+        balleW=wScreen/5;
+        balleH=wScreen/5;
+        img = setImage(mContext, R.drawable.brick,balleW,balleH);
     }
 
     // définit la coordonnée X de la balle
@@ -105,13 +105,21 @@ public class Palette
     }
 
     // retourne la largeur de la balle en pixel
-    public int getPaletteW() {
-        return paletteW;
+    public int getBalleW() {
+        return balleW;
     }
 
     // retourne la hauteur de la balle en pixel
-    public int getPaletteH() {
-        return paletteH;
+    public int getBalleH() {
+        return balleH;
+    }
+
+    public EtatBrique getEtat() {
+        return etat;
+    }
+
+    public void setEtat(EtatBrique etat) {
+        this.etat = etat;
     }
 
     // déplace la balle en détectant les collisions avec les bords de l'écran
@@ -121,60 +129,23 @@ public class Palette
         // on quitte
         if(!move) {return;}
 
-        // on incrémente les coordonnées X et Y
-        x += speedX;
-        y += speedY;
+        // on incrémente les coordonnées Y
+        y-=speedY;
 
-        // si x dépasse la largeur de l'écran, on inverse le déplacement
-        if(x+ paletteW > wEcran) {speedX=-INCREMENT;}
 
         // si y dépasse la hauteur l'écran, on inverse le déplacement
-        if(y+ paletteH > hEcran) {speedY=-INCREMENT;}
+        if(y+balleH > hEcran) {speedY=-INCREMENT;}
 
-        // si x passe à gauche de l'écran, on inverse le déplacement
-        if(x<0) {speedX=INCREMENT;}
 
-        // si y passe à dessus de l'écran, on inverse le déplacement
-        if(y<0) {speedY=INCREMENT;}
+        // si y passe à 0 on supprime la brique
+        if(y < 0) {etat = EtatBrique.OUT;}
     }
 
     // on dessine la balle, en x et y
     public void draw(Canvas canvas)
     {
         if(img==null) {return;}
-        canvas.drawBitmap(((BitmapDrawable) img).getBitmap(), x, y, null);
+        canvas.drawBitmap(img.getBitmap(), x, y, null);
     }
 
-    public int getMaxPaletteWidth() {
-        return maxPaletteWidth;
-    }
-
-    public void setMaxPaletteWidth(int maxPaletteWidth) {
-        this.maxPaletteWidth = maxPaletteWidth;
-    }
-
-    public int getMinPaletteWidth() {
-        return minPaletteWidth;
-    }
-
-    public void setMinPaletteWidth(int minPaletteWidth) {
-        this.minPaletteWidth = minPaletteWidth;
-    }
-
-    public int getMaxPaletteHeight() {
-        return maxPaletteHeight;
-    }
-
-    public void setMaxPaletteHeight(int maxPaletteHeight) {
-        this.maxPaletteHeight = maxPaletteHeight;
-    }
-
-    public int getMinPaletteHeight() {
-        return minPaletteHeight;
-    }
-
-    public void setMinPaletteHeight(int minPaletteHeight) {
-        this.minPaletteHeight = minPaletteHeight;
-    }
-
-} // public class Balle
+}
