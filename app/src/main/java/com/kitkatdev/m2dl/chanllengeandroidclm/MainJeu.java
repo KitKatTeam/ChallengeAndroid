@@ -104,7 +104,7 @@ public class MainJeu extends SurfaceView implements SurfaceHolder.Callback {
         CustomThread.start();
 
 
-        Bitmap background = BitmapFactory.decodeResource(getResources(), R.drawable.font1);
+        Bitmap background = BitmapFactory.decodeResource(getResources(), R.drawable.fond1);
         float scale = (float) background.getHeight() / (float) getHeight();
         int newWidth = Math.round(background.getWidth() / scale);
         int newHeight = Math.round(background.getHeight() / scale);
