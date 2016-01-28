@@ -154,6 +154,7 @@ public class Brique
             y=0;
             if(wEcran != 0) {
                 x= Math.min(new Random().nextInt(wEcran),wEcran-balleW);
+                this.etat = EtatBrique.OUT;
             } else
             {
                 x = new Random().nextInt(200);
