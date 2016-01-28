@@ -28,7 +28,9 @@ public class MainJeu extends SurfaceView implements SurfaceHolder.Callback {
 
     // Fonction qui "dessine" un écran de jeu
     public void doDraw(Canvas canvas) {
-        if(canvas==null) {return;}
+        if (canvas == null) {
+            return;
+        }
 
         // on efface l'écran, en blanc
         canvas.drawColor(Color.WHITE);
@@ -48,8 +50,8 @@ public class MainJeu extends SurfaceView implements SurfaceHolder.Callback {
     @Override
     public void surfaceCreated(SurfaceHolder surfaceHolder) {
         // création du processus CustomThread si cela n'est pas fait
-        if(CustomThread.getState()==Thread.State.TERMINATED) {
-            CustomThread=new CustomThread(this);
+        if (CustomThread.getState() == Thread.State.TERMINATED) {
+            CustomThread = new CustomThread(this);
         }
         CustomThread.setRunning(true);
         CustomThread.start();
@@ -66,25 +68,25 @@ public class MainJeu extends SurfaceView implements SurfaceHolder.Callback {
             try {
                 CustomThread.join();
                 retry = false;
+            } catch (InterruptedException e) {
             }
-            catch (InterruptedException e) {}
         }
     }
 
     // Gère les touchés sur l'écran
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        int currentX = (int)event.getX();
-        int currentY = (int)event.getY();
+        int currentX = (int) event.getX();
+        int currentY = (int) event.getY();
 
         switch (event.getAction()) {
 
             // code exécuté lorsque le doigt touche l'écran.
             case MotionEvent.ACTION_DOWN:
                 // si le doigt touche la palette :
-                if(currentX >= palette.getX() &&
-                        currentX <= palette.getX()+ palette.getBalleW() &&
-                        currentY >= palette.getY() && currentY <= palette.getY()+ palette.getBalleH() ) {
+                if (currentX >= palette.getX() &&
+                        currentX <= palette.getX() + palette.getPaletteW() &&
+                        currentY >= palette.getY() && currentY <= palette.getY() + palette.getPaletteH()) {
                     // on arrête de déplacer la palette
                     palette.setMove(false);
                 }
@@ -94,9 +96,11 @@ public class MainJeu extends SurfaceView implements SurfaceHolder.Callback {
             case MotionEvent.ACTION_MOVE:
                 // on déplace la palette sous le doigt du joueur
                 // si elle est déjà sous son doigt (oui si on a setMove à false)
-                if(!palette.isMoving()) {
-                    palette.setX(currentX);
-                    palette.setY(currentY);
+                if (!palette.isMoving()) {
+                    if (currentX >= palette.getMinPaletteWidth() && currentX + palette.getPaletteW()  - palette.getPaletteW() <= palette.getMaxPaletteWidth() && currentY >= palette.getMaxPaletteHeight() - palette.getPaletteH() && currentY + palette.getPaletteH() <= palette.getMaxPaletteHeight() + palette.getPaletteW()) {
+                        palette.setX(currentX - palette.getPaletteW() / 2);
+                        palette.setY(currentY - palette.getPaletteH() / 2);
+                    }
                 }
                 break;
 
@@ -114,6 +118,6 @@ public class MainJeu extends SurfaceView implements SurfaceHolder.Callback {
     // nous obtenons ici la largeur/hauteur de l'écran en pixels
     @Override
     public void surfaceChanged(SurfaceHolder surfaceHolder, int i, int w, int h) {
-        palette.resize(w,h); // on définit la taille de la palette selon la taille de l'écran
+        palette.resize(w, h); // on définit la taille de la palette selon la taille de l'écran
     }
 } // class MainJeu
