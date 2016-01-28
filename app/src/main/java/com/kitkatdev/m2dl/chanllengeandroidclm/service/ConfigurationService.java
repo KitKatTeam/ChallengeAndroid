@@ -36,7 +36,7 @@ public class ConfigurationService {
     private MediaPlayer mediaPlayer = new MediaPlayer();
     private MainActivity mainActivity;
     private MainJeu mainJeu;
-    private Integer sens;
+    private Integer sens = 0;
 
     public Integer getSens() {
         return sens;
