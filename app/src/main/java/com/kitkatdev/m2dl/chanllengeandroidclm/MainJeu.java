@@ -112,7 +112,6 @@ public class MainJeu extends SurfaceView implements SurfaceHolder.Callback {
                 boolean collision = currentBrique.moveWithCollisionDetection(palette);
                 if(collision){
                     nbPoints = currentBrique.getPoints();
-                    Toast.makeText(getContext(),"Points : "+nbPoints,Toast.LENGTH_LONG);
                     it.remove();
                 }
                 else if(currentBrique.getEtat() == Brique.EtatBrique.OUT){
