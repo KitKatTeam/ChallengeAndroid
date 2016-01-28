@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -94,6 +95,14 @@ public class MainJeu extends SurfaceView implements SurfaceHolder.Callback {
                 brique.draw(canvas);
             }
         }
+
+
+        Paint paint = new Paint();
+        paint.setColor(Color.BLACK);
+        paint.setTextSize(70);
+        Integer pt = nbPoints;
+        canvas.drawText("Nombre de point : "+pt.toString() , 700, 25, paint);
+        canvas.drawText("Nombre de vie : "+pt.toString() , 700, 25+80, paint);
 
     }
 
