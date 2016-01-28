@@ -30,6 +30,7 @@ public class MainJeu extends SurfaceView implements SurfaceHolder.Callback {
     private Brique brique2;
     private Brique brique3;
     private Palette palette;
+    private Palette palette2;
     private int nbPoints;
 
 
@@ -48,11 +49,11 @@ public class MainJeu extends SurfaceView implements SurfaceHolder.Callback {
         CustomThread = new CustomThread(this);
 
         // Creation briques
-        /*briques = new ArrayList<>();
+        briques = new ArrayList<>();
         briques.add(new Brique(getContext()));
         briques.add(new Brique(getContext()));
         briques.add(new Brique(getContext()));
-        briques.add(new Brique(getContext()));briques.add(new Brique(getContext()));*/
+        briques.add(new Brique(getContext()));briques.add(new Brique(getContext()));
 
 
         //briques.add(new Brique(this.getContext()));
@@ -61,9 +62,8 @@ public class MainJeu extends SurfaceView implements SurfaceHolder.Callback {
         // création d'un objet "palette", dont on définira la largeur/hauteur
         // selon la largeur ou la hauteur de l'écran
         palette = new Palette(this.getContext());
-        brique1 = new Brique(this.getContext());
+        palette2 = new Palette(this.getContext());
         nbPoints = 0;
-        //brique2 = new Brique(this.getContext(),10);
         //brique3 = new Brique(this.getContext(),50);
     }
 
@@ -82,11 +82,11 @@ public class MainJeu extends SurfaceView implements SurfaceHolder.Callback {
 
         // on dessine la palette
         palette.draw(canvas);
-        /*for (Brique brique : briques) {
+        palette2.draw(canvas);
+        for (Brique brique : briques) {
             brique.draw(canvas);
-        }*/
-        brique1.draw(canvas);
-        //brique2.draw(canvas);brique3.draw(canvas);
+        }
+        //brique3.draw(canvas);
 
     }
 
@@ -94,23 +94,20 @@ public class MainJeu extends SurfaceView implements SurfaceHolder.Callback {
     // On gère ici le déplacement des objets
     public void update() {
         palette.moveWithCollisionDetection();
-        boolean collision = brique1.moveWithCollisionDetection(palette);
 
-        if(collision){
+        /*if(collision){
             nbPoints++;
             Toast.makeText(getContext(),"Points : "+nbPoints,Toast.LENGTH_LONG);
-        }
-        /*Iterator<Brique> it = briques.iterator();
+        }*/
+        Iterator<Brique> it = briques.iterator();
         Brique currentBrique = null;
         while (it.hasNext()) {
             currentBrique = it.next();
-            currentBrique.moveWithCollisionDetection();
-            if(currentBrique.getEtat() == Brique.EtatBrique.OUT){
+            currentBrique.moveWithCollisionDetection(palette);
+            /*if(currentBrique.getEtat() == Brique.EtatBrique.OUT){
                 it.remove();
-            }
-        }*/
-
-        //brique2.moveWithCollisionDetection();
+            }*/
+        }
         //brique3.moveWithCollisionDetection();
     }
 
@@ -198,11 +195,10 @@ public class MainJeu extends SurfaceView implements SurfaceHolder.Callback {
     @Override
     public void surfaceChanged(SurfaceHolder surfaceHolder, int i, int w, int h) {
         palette.resize(w,h); // on définit la taille de la palette selon la taille de l'écran
-        /*for (Brique brique : briques) {
+        for (Brique brique : briques) {
             brique.resize(w,h);
-        }*/
-        brique1.resize(w,h);
-        //brique2.resize(w,h);brique3.resize(w,h);
+        }
+        palette2.resize(w,h);
 
     }
 

@@ -43,7 +43,8 @@ public class CustomThread extends Thread
             startTime = System.currentTimeMillis();
 
             // mise à jour du déplacement des ojets dans MainJeu.update()
-            synchronized (view.getHolder()) {view.update();}
+            synchronized (view.getHolder()) {view.update();
+                 }
 
             // Rendu de l'image, tout en vérrouillant l'accès car nous
             // y accédons à partir d'un processus distinct
