@@ -21,6 +21,25 @@ public class Brique
         MOVING, OUT
     }
 
+    public enum VitesseBrique {
+        LOW, MEDIUM, HIGH, NIGHTMARE;
+
+        public int getValue() {
+            switch (this){
+                case LOW:
+                    return 5;
+                case MEDIUM:
+                    return 10;
+                case HIGH:
+                    return 15;
+                case NIGHTMARE:
+                    return 30;
+                default :
+                    return 5;
+            }
+        }
+    }
+
     private static int HAUTEUR_PALETTE = 10;
     private BitmapDrawable img=null; // image de la balle
     private int x,y; // coordonnées x,y de la balle en pixel
@@ -28,6 +47,8 @@ public class Brique
     private int wEcran,hEcran; // largeur et hauteur de l'écran en pixels
     private boolean move = true; // 'true' si la balle doit se déplacer automatiquement, 'false' sinon
     private EtatBrique etat;
+    private VitesseBrique vitesseBrique;
+    private int sens;
 
 
     // pour déplacer la balle on ajoutera INCREMENT à ses coordonnées x et y
@@ -45,6 +66,23 @@ public class Brique
         y = 0;
         mContext=c; // sauvegarde du contexte
         etat = EtatBrique.MOVING;
+        int random = new Random().nextInt(VitesseBrique.values().length);
+        switch (random) {
+            case 0:
+                vitesseBrique = VitesseBrique.LOW;
+                break;
+            case 1:
+                vitesseBrique = VitesseBrique.MEDIUM;
+                break;
+            case 2:
+                vitesseBrique = VitesseBrique.HIGH;
+                break;
+            case 3:
+                vitesseBrique = VitesseBrique.NIGHTMARE;
+                break;
+        }
+
+        sens = 0;
     }
 
     public Brique(final Context c,int x)
@@ -89,8 +127,13 @@ public class Brique
             x = 1 + new Random().nextInt(wEcran);
         }*/
         //y=hEcran; // position de départ
+        if(sens == 0) {
+            x= new Random().nextInt(wScreen);
+        } else {
+            y = new Random().nextInt(hScreen);
+        }
 
-        x= new Random().nextInt(wScreen);
+
 
         // on définit (au choix) la taille de la balle à 1/5ème de la largeur de l'écran
         balleW=wScreen/5;
@@ -136,30 +179,48 @@ public class Brique
         this.etat = etat;
     }
 
+    public int getSens() {
+        return sens;
+    }
+
+    public void setSens(int sens) {
+        this.sens = sens;
+    }
+
     // déplace la balle en détectant les collisions avec les bords de l'écran
     public boolean moveWithCollisionDetection(Palette palette)
     {
 
         // on incrémente les coordonnées Y
-        y+=speedY;
+        if(sens == 0){
+            y+=vitesseBrique.getValue();
+        } else {
+            x += vitesseBrique.getValue();
+        }
+
 
 
         // si y dépasse la hauteur l'écran, on inverse le déplacement
-        if(y+balleH >= hEcran - HAUTEUR_PALETTE) {
-            Rect briqueRect = new Rect(x, y, balleW, balleH);
-            Rect paletteRect = new Rect(palette.getX(), palette.getY(), palette.getPaletteW(), palette.getPaletteH());
-            if(paletteRect.intersect(briqueRect)) {
-                return true;
-            }
-            y=0;
-            if(wEcran != 0) {
-                x= Math.min(new Random().nextInt(wEcran),wEcran-balleW);
+        if(sens == 0){
+            if(y+balleH >= hEcran - HAUTEUR_PALETTE) {
+                Rect briqueRect = new Rect(x, y, balleW, balleH);
+                Rect paletteRect = new Rect(palette.getX(), palette.getY(), palette.getPaletteW(), palette.getPaletteH());
+                if(paletteRect.intersect(briqueRect)) {
+                    return true;
+                }
                 this.etat = EtatBrique.OUT;
-            } else
-            {
-                x = new Random().nextInt(200);
+            }
+        } else {
+            if(x+balleW >= wEcran - HAUTEUR_PALETTE) {
+                Rect briqueRect = new Rect(x, y, balleW, balleH);
+                Rect paletteRect = new Rect(palette.getX(), palette.getY(), palette.getPaletteW(), palette.getPaletteH());
+                if(paletteRect.intersect(briqueRect)) {
+                    return true;
+                }
+                this.etat = EtatBrique.OUT;
             }
         }
+
         return false;
     }
 

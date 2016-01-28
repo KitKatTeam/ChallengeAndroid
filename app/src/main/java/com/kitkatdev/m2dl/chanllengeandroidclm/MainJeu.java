@@ -136,6 +136,11 @@ public class MainJeu extends SurfaceView implements SurfaceHolder.Callback {
             @Override
             public void run() {
                 changeFont();
+                synchronized (briques){
+                    for (Brique brique : briques){
+                        //brique.setSens(sens);
+                    }
+                }
             }
         }, 0, 3000);
 
