@@ -97,9 +97,13 @@ public class MainJeu extends SurfaceView implements SurfaceHolder.Callback {
                 // on déplace la palette sous le doigt du joueur
                 // si elle est déjà sous son doigt (oui si on a setMove à false)
                 if (!palette.isMoving()) {
-                    if (currentX >= palette.getMinPaletteWidth() && currentX + palette.getPaletteW()  - palette.getPaletteW() <= palette.getMaxPaletteWidth() && currentY >= palette.getMaxPaletteHeight() - palette.getPaletteH() && currentY + palette.getPaletteH() <= palette.getMaxPaletteHeight() + palette.getPaletteW()) {
+                    if (currentX >= palette.getMinPaletteWidth() && currentX + palette.getPaletteW()  - palette.getPaletteW() <= palette.getMaxPaletteWidth()) {
                         palette.setX(currentX - palette.getPaletteW() / 2);
-                        palette.setY(currentY - palette.getPaletteH() / 2);
+                        if(currentY >= palette.getMaxPaletteHeight() - palette.getPaletteH() && currentY + palette.getPaletteH() <= palette.getMaxPaletteHeight() + palette.getPaletteW() / 2)
+                        {
+                            palette.setY(currentY - palette.getPaletteH() / 2);
+
+                        }
                     }
                 }
                 break;
