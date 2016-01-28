@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="1">
+
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="64dp"
+                    android:id="@+id/imageView2"
+                    android:background="@drawable/gold"
+                    />
+
+                <TextView
+                    android:layout_marginLeft="50px"
+                    android:gravity="center"
+                    android:id="@+id/textViewRow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="TextView"
+                    android:textSize="30dp" />
+
+                <TextView
+                    android:gravity="center"
+                    android:id="@+id/scoreViewRow"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="0 Points"
+                    android:layout_marginLeft="50px"
+                    android:textSize="30dp" />
+
+
+        </LinearLayout>
+
+</LinearLayout>
