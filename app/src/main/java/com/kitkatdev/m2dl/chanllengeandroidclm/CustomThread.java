@@ -2,6 +2,8 @@ package com.kitkatdev.m2dl.chanllengeandroidclm;
 
 import android.graphics.Canvas;
 
+import com.kitkatdev.m2dl.chanllengeandroidclm.briques.Brique;
+
 public class CustomThread extends Thread
 {
     // on définit arbitrairement le nombre d'images par secondes à 30
@@ -48,7 +50,9 @@ public class CustomThread extends Thread
             Canvas c = null;
             try {
                 c = view.getHolder().lockCanvas();
-                synchronized (view.getHolder()) {view.doDraw(c);}
+                synchronized (view.getHolder()) {
+                    view.doDraw(c);
+                }
             }
             finally
             {

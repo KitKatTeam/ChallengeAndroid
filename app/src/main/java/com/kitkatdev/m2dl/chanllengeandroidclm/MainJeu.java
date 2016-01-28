@@ -7,19 +7,40 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import com.kitkatdev.m2dl.chanllengeandroidclm.briques.Brique;
+import com.kitkatdev.m2dl.chanllengeandroidclm.briques.TimerBrique;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+
 // SurfaceView est une surface de dessin.
 // référence : http://developer.android.com/reference/android/view/SurfaceView.html
 public class MainJeu extends SurfaceView implements SurfaceHolder.Callback {
 
     // déclaration de l'objet définissant la boucle principale de déplacement et de rendu
     private CustomThread CustomThread;
+    private List<Brique> briques;
     private Palette palette;
+    private TimerBrique timerBrique;
 
     // création de la surface de dessin
     public MainJeu(Context context) {
         super(context);
         getHolder().addCallback(this);
         CustomThread = new CustomThread(this);
+
+        // Creation briques
+        briques = new ArrayList<>();
+        briques.add(new Brique(getContext()));
+        briques.add(new Brique(getContext()));
+        briques.add(new Brique(getContext()));
+        briques.add(new Brique(getContext()));briques.add(new Brique(getContext()));
+
+        //briques.add(new Brique(this.getContext()));
+
 
         // création d'un objet "palette", dont on définira la largeur/hauteur
         // selon la largeur ou la hauteur de l'écran
@@ -35,12 +56,24 @@ public class MainJeu extends SurfaceView implements SurfaceHolder.Callback {
 
         // on dessine la palette
         palette.draw(canvas);
+        for (Brique brique : briques) {
+            brique.draw(canvas);
+        }
     }
 
     // Fonction appelée par la boucle principale (CustomThread)
     // On gère ici le déplacement des objets
     public void update() {
         palette.moveWithCollisionDetection();
+        Iterator<Brique> it = briques.iterator();
+        Brique currentBrique = null;
+        while (it.hasNext()) {
+            currentBrique = it.next();
+            currentBrique.moveWithCollisionDetection();
+            if(currentBrique.getEtat() == Brique.EtatBrique.OUT){
+                it.remove();
+            }
+        }
     }
 
     // Fonction obligatoire de l'objet SurfaceView
@@ -115,5 +148,12 @@ public class MainJeu extends SurfaceView implements SurfaceHolder.Callback {
     @Override
     public void surfaceChanged(SurfaceHolder surfaceHolder, int i, int w, int h) {
         palette.resize(w,h); // on définit la taille de la palette selon la taille de l'écran
+        for (Brique brique : briques) {
+            brique.resize(w,h);
+        }
+    }
+
+    public void addBrique(Brique brique) {
+        this.briques.add(brique);
     }
 } // class MainJeu
