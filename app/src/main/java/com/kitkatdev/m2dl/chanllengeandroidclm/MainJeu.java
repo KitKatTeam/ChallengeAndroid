@@ -1,8 +1,11 @@
 package com.kitkatdev.m2dl.chanllengeandroidclm;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -29,9 +32,18 @@ public class MainJeu extends SurfaceView implements SurfaceHolder.Callback {
     private Palette palette;
     private int nbPoints;
 
+
+    private Bitmap scaled;
+
+    public void onDraw(Canvas canvas) {
+        //canvas.drawBitmap(scaled, 0, 0, null); // draw the background
+    }
+
+
     // création de la surface de dessin
-    public MainJeu(Context context) {
+    public MainJeu(Context context ) {
         super(context);
+        setWillNotDraw(false);
         getHolder().addCallback(this);
         CustomThread = new CustomThread(this);
 
@@ -63,6 +75,10 @@ public class MainJeu extends SurfaceView implements SurfaceHolder.Callback {
 
         // on efface l'écran, en blanc
         canvas.drawColor(Color.WHITE);
+
+        if (scaled != null){
+            canvas.drawBitmap(scaled, 0, 0, null); // draw the background
+        }
 
         // on dessine la palette
         palette.draw(canvas);
@@ -108,6 +124,13 @@ public class MainJeu extends SurfaceView implements SurfaceHolder.Callback {
         }
         CustomThread.setRunning(true);
         CustomThread.start();
+
+
+        Bitmap background = BitmapFactory.decodeResource(getResources(), R.drawable.font1);
+        float scale = (float) background.getHeight() / (float) getHeight();
+        int newWidth = Math.round(background.getWidth() / scale);
+        int newHeight = Math.round(background.getHeight() / scale);
+        scaled = Bitmap.createScaledBitmap(background, newWidth, newHeight, true);
     }
 
     // Fonction obligatoire de l'objet SurfaceView
