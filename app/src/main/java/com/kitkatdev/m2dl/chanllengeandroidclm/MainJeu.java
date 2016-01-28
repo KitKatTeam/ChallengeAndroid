@@ -39,6 +39,7 @@ public class MainJeu extends SurfaceView implements SurfaceHolder.Callback {
     private Palette palette;
     private Integer cpt = 0;
     private int nbPoints;
+    private int nbVies;
 
     private Bitmap b1;
     private Bitmap b2;
@@ -71,6 +72,7 @@ public class MainJeu extends SurfaceView implements SurfaceHolder.Callback {
         // selon la largeur ou la hauteur de l'écran
         palette = new Palette(this.getContext());
         nbPoints = 0;
+        nbVies = 5;
 
         //brique3 = new Brique(this.getContext(),50);
     }
@@ -111,18 +113,22 @@ public class MainJeu extends SurfaceView implements SurfaceHolder.Callback {
     public void update() {
         palette.moveWithCollisionDetection();
 
-        /*if(collision){
-            nbPoints++;
-            Toast.makeText(getContext(),"Points : "+nbPoints,Toast.LENGTH_LONG);
-        }*/
         synchronized (briques) {
             Iterator<Brique> it = briques.iterator();
             Brique currentBrique = null;
             while (it.hasNext()) {
                 currentBrique = it.next();
-                currentBrique.moveWithCollisionDetection(palette);
-                if(currentBrique.getEtat() == Brique.EtatBrique.OUT){
+                boolean collision = currentBrique.moveWithCollisionDetection(palette);
+                if(collision){
+                    nbPoints = currentBrique.getPoints();
                     it.remove();
+                }
+                else if(currentBrique.getEtat() == Brique.EtatBrique.OUT){
+                    it.remove();
+                    nbVies--;
+                    if(nbVies == 0){
+                        //TODO aller vers page steve
+                    }
                 }
             }
         }
