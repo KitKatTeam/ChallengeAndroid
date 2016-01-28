@@ -1,11 +1,13 @@
 package com.kitkatdev.m2dl.chanllengeandroidclm;
 
 import android.content.Context;
+import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -13,6 +15,7 @@ import android.widget.Toast;
 
 import com.kitkatdev.m2dl.chanllengeandroidclm.briques.Brique;
 import com.kitkatdev.m2dl.chanllengeandroidclm.briques.TimerBrique;
+import com.kitkatdev.m2dl.chanllengeandroidclm.service.ConfigurationService;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -35,6 +38,11 @@ public class MainJeu extends SurfaceView implements SurfaceHolder.Callback {
     private Palette palette;
     private Integer cpt = 0;
     private int nbPoints;
+
+    private Bitmap b1;
+    private Bitmap b2;
+    private Bitmap b3;
+
     private static int nbTimes = 0;
 
 
@@ -48,6 +56,9 @@ public class MainJeu extends SurfaceView implements SurfaceHolder.Callback {
     // création de la surface de dessin
     public MainJeu(Context context ) {
         super(context);
+
+
+
         setWillNotDraw(false);
         getHolder().addCallback(this);
         CustomThread = new CustomThread(this);
@@ -67,6 +78,7 @@ public class MainJeu extends SurfaceView implements SurfaceHolder.Callback {
         // selon la largeur ou la hauteur de l'écran
         palette = new Palette(this.getContext());
         nbPoints = 0;
+
         //brique3 = new Brique(this.getContext(),50);
     }
 
@@ -121,23 +133,23 @@ public class MainJeu extends SurfaceView implements SurfaceHolder.Callback {
     // Fonction appelée immédiatement après la création de l'objet SurfaceView
     @Override
     public void surfaceCreated(SurfaceHolder surfaceHolder) {
-        // création du processus CustomThread si cela n'est pas fait
-        if (CustomThread.getState() == Thread.State.TERMINATED) {
-            CustomThread = new CustomThread(this);
+
+        if (b1 == null) {
+
+
+            b1 = BitmapFactory.decodeResource(getResources(), R.drawable.fond1);
+            b2 = BitmapFactory.decodeResource(getResources(), R.drawable.fond2);
+            b3 = BitmapFactory.decodeResource(getResources(), R.drawable.fond3);
+
+            scaled = Bitmap.createScaledBitmap(b1, palette.getMaxPaletteWidth(), palette.getMaxPaletteHeight(), true);
+
+            new Timer().scheduleAtFixedRate(new TimerTask() {
+                @Override
+                public void run() {
+                    changeFont();
+                }
+            }, 0, 3000);
         }
-        //CustomThread.setRunning(true);
-        //CustomThread.start();
-
-        Bitmap background = BitmapFactory.decodeResource(getResources(), R.drawable.fond1);
-        scaled = Bitmap.createScaledBitmap(background, palette.getMaxPaletteWidth(), palette.getMaxPaletteHeight(), true);
-
-
-        new Timer().scheduleAtFixedRate(new TimerTask() {
-            @Override
-            public void run() {
-                changeFont();
-            }
-        }, 0, 3000);
 
         /*new Timer().scheduleAtFixedRate(new TimerTask() {
             @Override
@@ -171,19 +183,39 @@ public class MainJeu extends SurfaceView implements SurfaceHolder.Callback {
 
     public void changeFont(){
         cpt++;
+
+
+
+        // BITMAP
         Bitmap background = null;
         if (cpt % 3 == 0){
-            background = BitmapFactory.decodeResource(getResources(), R.drawable.fond1);
+            background = b1;
 
         }
         if (cpt % 3 == 1){
-            background = BitmapFactory.decodeResource(getResources(), R.drawable.fond2);
+            background = b2;
+
         }
         if (cpt % 3 == 2){
-            background = BitmapFactory.decodeResource(getResources(), R.drawable.fond3);
+            background = b3;
+
         }
 
         scaled = Bitmap.createScaledBitmap(background, palette.getMaxPaletteWidth(), palette.getMaxPaletteHeight(), true);
+
+        // SCREEN
+        ConfigurationService configurationService = ConfigurationService.getInstance();
+        if (cpt % 3 == 0) {
+            configurationService.setSens(1);
+        }
+        if (cpt % 3 == 1) {
+            configurationService.setSens(0);
+        }
+        if (cpt % 3 == 2) {
+            configurationService.setSens(1);
+        }
+
+
 
 
     }
