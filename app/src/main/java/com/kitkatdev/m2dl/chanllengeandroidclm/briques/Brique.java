@@ -9,6 +9,7 @@ import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 
 import com.kitkatdev.m2dl.chanllengeandroidclm.Palette;
 import com.kitkatdev.m2dl.chanllengeandroidclm.R;
@@ -189,30 +190,36 @@ public class Brique
             x += vitesseBrique.getValue();
         }
 
+        Rect r1 = new Rect(200,200,200,200);
+        Rect r2 = new Rect(250,200,200,200);
+        if(r1.intersect(r2)) {
+            Log.d("eee","ddd");
+        }
 
-
+        Boolean b = false;
         // si y dépasse la hauteur l'écran, on inverse le déplacement
         if(sens == 0){
             if(y+balleH >= hEcran - HAUTEUR_PALETTE) {
-                Rect briqueRect = new Rect(x, y, balleW, balleH);
-                Rect paletteRect = new Rect(palette.getX(), palette.getY(), palette.getPaletteW(), palette.getPaletteH());
+                Rect briqueRect = new Rect(x, y, x + balleW, y + balleH);
+                Rect paletteRect = new Rect(palette.getX(), palette.getY(), palette.getX()+palette.getPaletteW(), palette.getY()+palette.getPaletteH());
                 if(paletteRect.intersect(briqueRect)) {
-                    return true;
+                    b = true;
                 }
                 this.etat = EtatBrique.OUT;
             }
         } else {
             if(x+balleW >= wEcran - HAUTEUR_PALETTE) {
-                Rect briqueRect = new Rect(x, y, balleW, balleH);
-                Rect paletteRect = new Rect(palette.getX(), palette.getY(), palette.getPaletteW(), palette.getPaletteH());
+                Rect briqueRect = new Rect(x, y, x + balleW, y + balleH);
+                Rect paletteRect = new Rect(palette.getX(), palette.getY(), palette.getX()+palette.getPaletteW(), palette.getY()+palette.getPaletteH());
                 if(paletteRect.intersect(briqueRect)) {
-                    return true;
+                    b = true;
                 }
                 this.etat = EtatBrique.OUT;
             }
         }
 
-        return false;
+
+        return b;
     }
 
     // on dessine la balle, en x et y
