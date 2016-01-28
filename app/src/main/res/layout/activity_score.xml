@@ -20,28 +20,33 @@
         android:layout_centerHorizontal="true" />
 
     <ListView
+        android:paddingTop="80px"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/listScoreView"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_above="@+id/restartButton"
-        android:layout_below="@+id/imageView" />
+        android:layout_below="@+id/imageView"
+        android:layout_above="@+id/restartButton" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Nouvelle partie"
+
         android:id="@+id/restartButton"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:background="#f9613f" />
 
     <Button
+        android:layout_marginRight="20px"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Menu principal"
         android:id="@+id/mainmenuButton"
+        android:background="#f9613f"
         android:layout_alignParentBottom="true"
         android:layout_toLeftOf="@+id/restartButton"
         android:layout_toStartOf="@+id/restartButton" />

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import com.kitkatdev.m2dl.chanllengeandroidclm.MainActivity;
 import com.kitkatdev.m2dl.chanllengeandroidclm.R;
 import com.kitkatdev.m2dl.chanllengeandroidclm.service.ConfigurationService;
 
@@ -26,7 +27,7 @@ public class MenuActivity extends AppCompatActivity {
                 ConfigurationService configurationService = ConfigurationService.getInstance();
                 configurationService.setUserName(nouvellePartieButton.getText().toString());
 
-                Intent intent = new Intent(MenuActivity.this, ScoreActivity.class);
+                Intent intent = new Intent(MenuActivity.this, MainActivity.class);
                 startActivity(intent);
             }
         });
