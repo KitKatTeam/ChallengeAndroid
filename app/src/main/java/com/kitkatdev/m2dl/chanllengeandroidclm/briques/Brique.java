@@ -73,9 +73,9 @@ public class Brique
         wEcran=wScreen;
         hEcran=hScreen;
 
-        if(wEcran != 0) {
+        /*if(wEcran != 0) {
             x = 1 + new Random().nextInt(wEcran);
-        }
+        }*/
         y=hEcran; // position de départ
 
         // on définit (au choix) la taille de la balle à 1/5ème de la largeur de l'écran
