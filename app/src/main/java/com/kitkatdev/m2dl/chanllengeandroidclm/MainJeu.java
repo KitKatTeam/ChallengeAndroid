@@ -42,7 +42,7 @@ public class MainJeu extends SurfaceView implements SurfaceHolder.Callback {
     private Brique brique3;
     private Palette palette;
     private Integer cpt = 0;
-    private int nbPoints;
+    private int nbPoints = 0;
     private int nbVies;
 
     private Bitmap b1;
@@ -75,7 +75,7 @@ public class MainJeu extends SurfaceView implements SurfaceHolder.Callback {
         // création d'un objet "palette", dont on définira la largeur/hauteur
         // selon la largeur ou la hauteur de l'écran
         palette = new Palette(this.getContext());
-        nbPoints = 0;
+
         nbVies = 5;
 
         //brique3 = new Brique(this.getContext(),50);
@@ -123,7 +123,7 @@ public class MainJeu extends SurfaceView implements SurfaceHolder.Callback {
                 currentBrique = it.next();
                 boolean collision = currentBrique.moveWithCollisionDetection(palette);
                 if(collision){
-                    nbPoints = currentBrique.getPoints();
+                    nbPoints += currentBrique.getPoints();
                     it.remove();
                 }
                 else if(currentBrique.getEtat() == Brique.EtatBrique.OUT){
@@ -167,8 +167,10 @@ public class MainJeu extends SurfaceView implements SurfaceHolder.Callback {
                     palette.changeDeSens(ConfigurationService.getInstance().getSens());
                     SurfaceHolder holder = getHolder();
                     Canvas c = holder.lockCanvas();
-                    palette.draw(c);
-                    getHolder().unlockCanvasAndPost(c);
+                    if (c != null) {
+                        palette.draw(c);
+                        getHolder().unlockCanvasAndPost(c);
+                    }
                 }
             }, 0, 3000);
         }
@@ -186,6 +188,7 @@ public class MainJeu extends SurfaceView implements SurfaceHolder.Callback {
                     }
                     update();
                     SurfaceHolder holder = getHolder();
+                if (holder != null) {
                     Canvas c = holder.lockCanvas();
                     if (c != null) {
 
@@ -193,6 +196,7 @@ public class MainJeu extends SurfaceView implements SurfaceHolder.Callback {
                         getHolder().unlockCanvasAndPost(c);
                     }
                     nbTimes++;
+                }
             }
 
         }, 0, 10);
@@ -233,13 +237,13 @@ public class MainJeu extends SurfaceView implements SurfaceHolder.Callback {
         // SCREEN
 
         if (cpt % 3 == 0) {
-            configurationService.setSens(1);
+            configurationService.setSens(0);
         }
         if (cpt % 3 == 1) {
             configurationService.setSens(0);
         }
         if (cpt % 3 == 2) {
-            configurationService.setSens(1);
+            configurationService.setSens(0);
         }
 
 
